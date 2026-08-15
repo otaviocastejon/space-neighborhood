@@ -30,6 +30,7 @@ Clique no que aparecer. O cartão à esquerda diz o que é, conta um fato legal 
 
 | Input | Action / Ação |
 | --- | --- |
+| Top bar | Follow a world / Acompanhar um mundo |
 | Click a world | Learn about it / Aprender sobre ele |
 | Click empty space | Overview / Visão geral |
 | Drag | Pan / Arrastar o céu |
@@ -41,6 +42,6 @@ Clique no que aparecer. O cartão à esquerda diz o que é, conta um fato legal 
 | `r` | Reset |
 | `esc` | Close menu |
 
-**Learn / Aprender** flies a ship to the Moon, lines up eclipses, and shows the nights planets are easiest to see from Earth.
+**Learn / Aprender** lines up eclipses and shows the nights planets are easiest to see from Earth.
 
 Physics is leapfrog n-body in AU / years / solar masses (`G = 4π²`). No build, no dependencies, no backend. MIT.

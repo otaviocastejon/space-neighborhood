@@ -73,7 +73,6 @@ export function accelAt(x, y, massive) {
 
 export function stepTracers(tracers, massive, dt = DT) {
   for (const t of tracers) {
-    if (t.kind === "ship") continue;
     const a0 = accelAt(t.x, t.y, massive);
     t.vx += a0.ax * dt * 0.5;
     t.vy += a0.ay * dt * 0.5;

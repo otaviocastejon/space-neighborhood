@@ -142,10 +142,64 @@ canvas {
   opacity: 0.7;
 }
 
+.planet-bar {
+  position: absolute;
+  z-index: 4;
+  top: 3.45rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: stretch;
+  gap: 0.12rem;
+  max-width: calc(100vw - 2rem);
+  overflow-x: auto;
+  padding: 0.32rem 0.38rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--panel);
+  backdrop-filter: blur(14px);
+  pointer-events: auto;
+  cursor: default;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(232, 230, 223, 0.2) transparent;
+}
+
+.planet-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.28rem;
+  min-width: 3.35rem;
+  padding: 0.38rem 0.42rem 0.32rem;
+  border-radius: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-size: 0.58rem;
+  line-height: 1.1;
+}
+
+.planet-icon {
+  width: 0.82rem;
+  height: 0.82rem;
+  border-radius: 50%;
+  box-shadow: 0 0 8px color-mix(in srgb, currentColor 70%, transparent);
+}
+
+.planet-icon.rings {
+  box-shadow:
+    0 0 0 2px rgba(232, 210, 160, 0.5),
+    0 0 8px color-mix(in srgb, currentColor 70%, transparent);
+}
+
+.planet-name {
+  white-space: nowrap;
+}
+
 .card {
   position: absolute;
   z-index: 3;
-  top: 4.2rem;
+  top: 7.1rem;
   left: 1.4rem;
   width: min(22rem, calc(100vw - 2.8rem));
   max-height: min(70vh, calc(100vh - 11rem));
@@ -258,7 +312,7 @@ canvas {
 .menu {
   position: absolute;
   z-index: 4;
-  top: 3.8rem;
+  top: 7.1rem;
   right: 1.1rem;
   bottom: 5.6rem;
   width: min(22rem, calc(100vw - 2.2rem));
@@ -533,6 +587,20 @@ button.active {
 }
 
 @media (max-width: 720px) {
+  .planet-bar {
+    top: 3.2rem;
+    max-width: calc(100vw - 1.2rem);
+  }
+
+  .planet-btn {
+    min-width: 2.7rem;
+    padding: 0.32rem 0.28rem 0.28rem;
+  }
+
+  .planet-name {
+    font-size: 0.52rem;
+  }
+
   .menu {
     top: auto;
     bottom: 5.4rem;
@@ -543,6 +611,7 @@ button.active {
   }
 
   .card {
+    top: 6.5rem;
     right: 0.7rem;
     width: auto;
   }

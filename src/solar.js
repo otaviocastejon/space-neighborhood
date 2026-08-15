@@ -103,6 +103,14 @@ const PLANETS = [
   },
 ];
 
+export function navWorlds() {
+  return [
+    { id: "sun", color: "#ffcf6b" },
+    ...PLANETS.map((p) => ({ id: p.id, color: p.color, rings: Boolean(p.rings) })),
+    { id: "moon", color: "#d9d4cc" },
+  ];
+}
+
 export function systemGuide() {
   return { id: "system", kind: "guide", ...t("guide.system") };
 }

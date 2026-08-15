@@ -1,4 +1,3 @@
-import { missionPathSamples } from "./learn.js";
 import { t } from "./i18n.js";
 
 export class Renderer {
@@ -155,7 +154,6 @@ export class Renderer {
 
     this.drawLineup(ctx, state, cam);
     this.drawShadow(ctx, state, cam);
-    this.drawMissionPath(ctx, state, cam);
 
     if (state.selected === "belt" && !state.spotlight) {
       const c = this.worldToScreen(sun.x, sun.y, cam);
@@ -171,7 +169,7 @@ export class Renderer {
     if (state.flags.orbits) {
       const earth = state.bodies.find((b) => b.id === "earth");
       const moon = state.bodies.find((b) => b.id === "moon");
-      if (earth && moon && this.pixelsPerUnit > 40 && state.lesson !== "starship") {
+      if (earth && moon && this.pixelsPerUnit > 40) {
         const e = this.worldToScreen(earth.x, earth.y, cam);
         ctx.strokeStyle = "rgba(232,230,223,0.16)";
         ctx.beginPath();
@@ -191,19 +189,6 @@ export class Renderer {
       }
     }
 
-    for (const t of state.tracers) {
-      if (t.kind === "asteroid") continue;
-      const p = this.worldToScreen(t.x, t.y, cam);
-      if (t.kind === "ship") {
-        this.drawShip(ctx, p, t, state.selected === t.id);
-        continue;
-      }
-      ctx.fillStyle = t.color;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, t.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
     const showLabels = state.flags.labels || Boolean(state.spotlight);
     for (const b of state.bodies) {
       const lit = !state.spotlight || state.spotlight.includes(b.id);
@@ -221,58 +206,6 @@ export class Renderer {
     }
 
     this.drawSunCue(ctx, sun, cam);
-  }
-
-  drawMissionPath(ctx, state, cam) {
-    if (state.lesson !== "starship" || !state.mission) return;
-    const earth = state.bodies.find((b) => b.id === "earth");
-    const moon = state.bodies.find((b) => b.id === "moon");
-    if (!earth || !moon) return;
-    const { outbound, inbound, orbitR } = missionPathSamples(earth, moon);
-    const phase = state.mission.phase;
-    const toScreen = (p) => this.worldToScreen(p.x, p.y, cam);
-
-    const stroke = (pts, color, width, dash) => {
-      if (pts.length < 2) return;
-      ctx.save();
-      ctx.strokeStyle = color;
-      ctx.lineWidth = width;
-      ctx.setLineDash(dash);
-      ctx.beginPath();
-      const a = toScreen(pts[0]);
-      ctx.moveTo(a.x, a.y);
-      for (let i = 1; i < pts.length; i++) {
-        const q = toScreen(pts[i]);
-        ctx.lineTo(q.x, q.y);
-      }
-      ctx.stroke();
-      ctx.restore();
-    };
-
-    const outOn = phase === "to-moon";
-    const loopOn = phase === "lunar";
-    const inOn = phase === "home";
-    stroke(outbound, outOn ? "rgba(78,205,196,0.95)" : "rgba(78,205,196,0.28)", outOn ? 2.2 : 1.3, [6, 5]);
-    const m = toScreen(moon);
-    ctx.save();
-    ctx.strokeStyle = loopOn ? "rgba(255, 207, 107, 0.95)" : "rgba(255, 207, 107, 0.3)";
-    ctx.lineWidth = loopOn ? 2.2 : 1.3;
-    ctx.setLineDash(loopOn ? [] : [6, 5]);
-    ctx.beginPath();
-    ctx.arc(m.x, m.y, orbitR * this.pixelsPerUnit, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
-    stroke(inbound, inOn ? "rgba(110,198,255,0.95)" : "rgba(110,198,255,0.28)", inOn ? 2.2 : 1.3, [6, 5]);
-
-    ctx.save();
-    ctx.font = "11px 'Avenir Next', 'Segoe UI', sans-serif";
-    const midOut = toScreen(outbound[Math.floor(outbound.length / 2)]);
-    const midIn = toScreen(inbound[Math.floor(inbound.length / 2)]);
-    ctx.fillStyle = outOn ? "rgba(78,205,196,0.95)" : "rgba(78,205,196,0.45)";
-    ctx.fillText(t("out"), midOut.x + 8, midOut.y - 8);
-    ctx.fillStyle = inOn ? "rgba(110,198,255,0.95)" : "rgba(110,198,255,0.45)";
-    ctx.fillText(t("home"), midIn.x + 8, midIn.y + 14);
-    ctx.restore();
   }
 
   drawLineup(ctx, state, cam) {
@@ -373,49 +306,6 @@ export class Renderer {
     const labelX = x + (x < cx ? 14 : -36);
     const labelY = y + (y < cy ? 16 : -10);
     ctx.fillText(t("sunCue"), labelX, labelY);
-  }
-
-  drawShip(ctx, p, ship, selected) {
-    const ang = Math.atan2(-(ship.vy || 0), ship.vx || 1);
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate(ang);
-    if (ship.burn) {
-      ctx.fillStyle = "rgba(255, 140, 64, 0.95)";
-      ctx.beginPath();
-      ctx.moveTo(-11, 0);
-      ctx.lineTo(-5, 3.2);
-      ctx.lineTo(-5, -3.2);
-      ctx.closePath();
-      ctx.fill();
-      ctx.fillStyle = "rgba(255, 220, 140, 0.9)";
-      ctx.beginPath();
-      ctx.moveTo(-8, 0);
-      ctx.lineTo(-5, 1.4);
-      ctx.lineTo(-5, -1.4);
-      ctx.closePath();
-      ctx.fill();
-    }
-    ctx.fillStyle = "#cfd3d8";
-    ctx.beginPath();
-    ctx.moveTo(9, 0);
-    ctx.lineTo(-6, 4.2);
-    ctx.lineTo(-4, 0);
-    ctx.lineTo(-6, -4.2);
-    ctx.closePath();
-    ctx.fill();
-    ctx.fillStyle = "#8ab4ff";
-    ctx.beginPath();
-    ctx.arc(2, 0, 1.3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-    if (selected) {
-      ctx.strokeStyle = "rgba(78,205,196,0.9)";
-      ctx.lineWidth = 1.4;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 14, 0, Math.PI * 2);
-      ctx.stroke();
-    }
   }
 
   drawBody(ctx, p, b, selected) {

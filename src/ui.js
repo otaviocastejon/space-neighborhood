@@ -1,5 +1,5 @@
-import { bodyFacts, followable, missionFacts } from "./learn.js";
-import { topicFor } from "./solar.js";
+import { bodyFacts, followable } from "./learn.js";
+import { navWorlds, topicFor } from "./solar.js";
 import { applyStaticI18n, getLocale, setLocale, t } from "./i18n.js";
 
 export const SPEEDS = [
@@ -25,6 +25,7 @@ export function mountUI(handlers) {
   const cardKnow = document.getElementById("card-know");
   const cardStats = document.getElementById("card-stats");
   const eventEl = document.getElementById("event");
+  const planetBar = document.getElementById("planet-bar");
 
   applyStaticI18n();
 
@@ -111,11 +112,40 @@ export function mountUI(handlers) {
     }
   }
 
+  function setPlanetBar() {
+    planetBar.innerHTML = "";
+    for (const world of navWorlds()) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "planet-btn";
+      btn.dataset.id = world.id;
+      const name = t(`bodies.${world.id}.name`);
+      btn.setAttribute("aria-label", name);
+      const icon = document.createElement("span");
+      icon.className = world.rings ? "planet-icon rings" : "planet-icon";
+      icon.style.background = world.color;
+      icon.style.color = world.color;
+      const label = document.createElement("span");
+      label.className = "planet-name";
+      label.textContent = name;
+      btn.append(icon, label);
+      btn.addEventListener("click", () => handlers.onFollow(world.id));
+      planetBar.appendChild(btn);
+    }
+  }
+
+  function markFollow(id) {
+    for (const btn of planetBar.querySelectorAll(".planet-btn")) {
+      btn.classList.toggle("active", btn.dataset.id === id);
+    }
+  }
+
   function applyI18n() {
     applyStaticI18n();
     refreshSpeedLabels();
     const active = viewsEl.querySelector("button.active")?.dataset.id || "system";
     setViewButtons(active);
+    setPlanetBar();
     menuBtn.textContent = menu.hidden ? t("menu") : t("hide");
   }
 
@@ -125,6 +155,7 @@ export function mountUI(handlers) {
     timeEl.textContent = t("time", { y: years, d: days });
     const followed = followable(state, state.follow);
     followEl.textContent = followed ? t("watching", { name: followed.name }) : t("looking");
+    markFollow(state.follow);
     hint.classList.toggle("visible", !state.lesson && state.time < 1.2 && state.selected === "system" && menu.hidden);
 
     pauseBtn.classList.toggle("active", state.paused);
@@ -152,11 +183,7 @@ export function mountUI(handlers) {
       cardKnow.textContent = "";
     }
     const earth = state.bodies.find((b) => b.id === "earth");
-    const rows = topic.facts
-      ? topic.facts
-      : topic.kind === "ship"
-        ? missionFacts(state)
-        : bodyFacts(topic, earth);
+    const rows = topic.facts ? topic.facts : bodyFacts(topic, earth);
     cardStats.innerHTML = rows
       .map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`)
       .join("");
@@ -183,6 +210,7 @@ export function mountUI(handlers) {
   }
 
   refreshSpeedLabels();
+  setPlanetBar();
 
   return {
     setViewButtons,

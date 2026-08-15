@@ -3,20 +3,11 @@ import { Renderer } from "./render.js";
 import { bodiesFromPayload, copyShareURL, readHash } from "./share.js";
 import { VIEWS, makeSolarSystem } from "./solar.js";
 import { SPEEDS, mountUI, nearestSpeed } from "./ui.js";
-import {
-  followable,
-  missionFocus,
-  placeMoon,
-  refreshLessonCopy,
-  setupEclipse,
-  setupVisibility,
-  startStarship,
-  stepMission,
-} from "./learn.js";
+import { followable, placeMoon, refreshLessonCopy, setupEclipse, setupVisibility } from "./learn.js";
 import { localizeState, t } from "./i18n.js";
 
 const CLICK_PX = 8;
-const UI_SELECTOR = "button, aside, label, .menu, .speed-dock, input, .card, .event";
+const UI_SELECTOR = "button, aside, label, .menu, .speed-dock, input, .card, .event, .planet-bar";
 
 const space = document.getElementById("space");
 const stars = document.getElementById("stars");
@@ -42,7 +33,6 @@ const state = {
     asteroids: true,
     trails: true,
   },
-  mission: null,
   event: null,
   lesson: null,
   focus: null,
@@ -71,6 +61,7 @@ const ui = mountUI({
     setView(id);
   },
   onLearn: (id) => learn(id),
+  onFollow: followWorld,
   onPause: () => {
     state.paused = !state.paused;
   },
@@ -108,7 +99,6 @@ function resetSystem(message) {
   state.zoom = 1;
   state.viewId = "system";
   state.view = VIEWS.system.view;
-  state.mission = null;
   state.event = null;
   state.lesson = null;
   state.focus = null;
@@ -213,6 +203,13 @@ function applyLesson(id, lesson) {
   if (lesson.frame) frameBodies(lesson.frame);
 }
 
+function followWorld(id) {
+  if (state.lesson) resetSystem();
+  if (!followable(state, id)) return;
+  select(id, { follow: true });
+  if (id === "moon") setView("earth");
+}
+
 function select(id, { follow = false } = {}) {
   state.selected = id;
   if (follow) {
@@ -227,15 +224,9 @@ function select(id, { follow = false } = {}) {
 
 function learn(id) {
   resetSystem();
-  let lesson = null;
-  if (id === "starship") {
-    lesson = startStarship(state);
-    renderer.clearSpace();
-  } else if (id.startsWith("eclipse-")) {
-    lesson = setupEclipse(state, id.replace("eclipse-", ""));
-  } else {
-    lesson = setupVisibility(state, id);
-  }
+  const lesson = id.startsWith("eclipse-")
+    ? setupEclipse(state, id.replace("eclipse-", ""))
+    : setupVisibility(state, id);
   applyLesson(id, lesson);
 }
 
@@ -358,10 +349,7 @@ window.addEventListener("pointerup", (event) => {
 
 function inspectAt(sx, sy) {
   const cam = camera();
-  const notables = [
-    ...state.bodies.filter((b) => !state.spotlight || state.spotlight.includes(b.id)),
-    ...state.tracers.filter((t) => t.kind === "ship"),
-  ];
+    const notables = state.bodies.filter((b) => !state.spotlight || state.spotlight.includes(b.id));
   const hit = renderer.hitTest(sx, sy, notables, cam);
   if (hit) {
     select(hit.id, { follow: true });
@@ -401,24 +389,11 @@ function tick() {
   if (!state.paused) {
     const earth = state.bodies.find((b) => b.id === "earth");
     const moon = state.bodies.find((b) => b.id === "moon");
-    const simDt = state.mission?.active ? DT / 8 : DT;
     for (let i = 0; i < state.warp; i++) {
-      step(state.bodies, simDt);
-      if (earth && moon) placeMoon(moon, earth, simDt);
-      stepTracers(state.tracers, state.bodies, simDt);
-      stepMission(state, simDt);
-      state.time += simDt;
-    }
-    if (state.mission?.active) {
-      const focus = missionFocus(state);
-      if (focus) state.focus = focus;
-    }
-    if (state.mission && !state.mission.active && state.mission.phase === "done") {
-      state.mission.phase = "landed";
-      state.follow = "earth";
-      state.focus = null;
-      state.selected = "lesson";
-      ui.showToast(t("toast.welcome"));
+      step(state.bodies, DT);
+      if (earth && moon) placeMoon(moon, earth, DT);
+      stepTracers(state.tracers, state.bodies, DT);
+      state.time += DT;
     }
   } else {
     const earth = state.bodies.find((b) => b.id === "earth");

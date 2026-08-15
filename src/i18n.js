@@ -19,7 +19,6 @@ const en = {
     copied: "link copied",
     copyFail: "could not copy",
     reset: "back to the usual planets",
-    welcome: "welcome home",
   },
   views: {
     earth: "Moon",
@@ -34,7 +33,8 @@ const en = {
   },
   ui: {
     learn: "Learn",
-    learnLede: "Trips, shadows, and the best nights to look up.",
+    learnLede: "Shadows and the best nights to look up.",
+    worlds: "Go to a world",
     look: "Look",
     lookLede: "Zoom to a neighborhood.",
     show: "Show",
@@ -54,10 +54,6 @@ const en = {
     happening: "What's happening",
   },
   learn: {
-    starship: {
-      title: "Fly to the Moon",
-      lede: "A spaceship goes Earth → Moon → Earth. About 3 days each way",
-    },
     "eclipse-solar": {
       title: "Total solar eclipse",
       lede: "The Moon covers the Sun. Day turns dark for a few minutes",
@@ -105,7 +101,7 @@ const en = {
     realDist: "Real distance",
     realDistMoon: "384,000 km  ·  1.3 light-seconds",
     onMap: "On this map",
-    onMapMoon: "the Moon is shown {n}× farther so you can see the trip",
+    onMapMoon: "the Moon is shown {n}× farther so you can see it next to Earth",
     live: "Could we live there?",
     phase: "Phase",
     distance: "Distance",
@@ -241,59 +237,10 @@ const en = {
         "The Moon is slowly drifting away from Earth, about 4 centimeters per year — as fast as your fingernails grow.",
       live: "People have visited, but you need a spacesuit. There is no air, and days are boiling while nights are freezing.",
     },
-    starship: {
-      name: "Starship",
-      role: "Spaceship",
-      blurb: "A spaceship on a practice trip to the Moon and back. Real flights take about three days each way.",
-      didYouKnow: "Apollo 11 did this in 1969. Radio to the Moon takes only about 1.3 seconds.",
-    },
     asteroid: { name: "Asteroid" },
   },
   flight: {
     happening: "What's happening",
-    "to-moon": {
-      name: "Flying to the Moon",
-      blurb: "Watch the spaceship leave Earth and head for the Moon. The top path is the way out.",
-      didYouKnow: "The Moon is drawn farther from Earth on this map so you can actually see the trip.",
-      facts: [
-        ["Now", "Earth → Moon"],
-        ["Next", "Loop around the Moon"],
-      ],
-    },
-    lunar: {
-      name: "Around the Moon",
-      blurb: "It made it! The ship is looping around the Moon — two times — like a real lunar orbit.",
-      facts: [
-        ["Now", "Orbiting the Moon"],
-        ["Loops", "2"],
-        ["Next", "Fly home"],
-      ],
-    },
-    home: {
-      name: "Coming home",
-      blurb:
-        "Leaving the Moon and flying back to Earth on the bottom path, so you can tell it apart from the trip out.",
-      facts: [
-        ["Now", "Moon → Earth"],
-        ["Next", "Splashdown"],
-      ],
-    },
-    done: {
-      name: "Splashdown",
-      blurb:
-        "Back on Earth. A real round trip is about a week of flying. The Moon is 384,000 km away — far, but close enough that radio takes only about 1.3 seconds.",
-      facts: [
-        ["Path", "Earth → Moon → Earth"],
-        ["Real trip", "about a week"],
-      ],
-    },
-    phase: {
-      "to-moon": "Flying to the Moon",
-      lunar: "Orbiting the Moon",
-      home: "Coming home",
-      done: "Back on Earth",
-      landed: "Back on Earth",
-    },
   },
   eclipse: {
     squish:
@@ -401,7 +348,6 @@ const pt = {
     copied: "link copiado",
     copyFail: "não deu para copiar",
     reset: "de volta aos planetas de sempre",
-    welcome: "bem-vindo de volta",
   },
   views: {
     earth: "Lua",
@@ -416,7 +362,8 @@ const pt = {
   },
   ui: {
     learn: "Aprender",
-    learnLede: "Viagens, sombras e as melhores noites para olhar o céu.",
+    learnLede: "Sombras e as melhores noites para olhar o céu.",
+    worlds: "Ir para um mundo",
     look: "Olhar",
     lookLede: "Aproxime o zoom de um pedaço da vizinhança.",
     show: "Mostrar",
@@ -436,10 +383,6 @@ const pt = {
     happening: "O que está acontecendo",
   },
   learn: {
-    starship: {
-      title: "Voar até a Lua",
-      lede: "Uma nave vai Terra → Lua → Terra. Cerca de 3 dias cada trecho",
-    },
     "eclipse-solar": {
       title: "Eclipse solar total",
       lede: "A Lua tapa o Sol. O dia fica escuro por alguns minutos",
@@ -487,7 +430,7 @@ const pt = {
     realDist: "Distância de verdade",
     realDistMoon: "384.000 km  ·  1,3 segundos-luz",
     onMap: "Neste mapa",
-    onMapMoon: "a Lua aparece {n}× mais longe para você ver a viagem",
+    onMapMoon: "a Lua aparece {n}× mais longe para você enxergar ela ao lado da Terra",
     live: "Dá para morar lá?",
     phase: "Fase",
     distance: "Distância",
@@ -624,58 +567,10 @@ const pt = {
         "A Lua está se afastando da Terra bem devagar, uns 4 centímetros por ano — na velocidade que a unha cresce.",
       live: "Gente já visitou, mas precisa de um traje espacial. Não tem ar, o dia ferve e a noite congela.",
     },
-    starship: {
-      name: "Nave",
-      role: "Nave espacial",
-      blurb: "Uma nave num treino de ida e volta à Lua. Na vida real, cada trecho leva cerca de três dias.",
-      didYouKnow: "A Apollo 11 fez isso em 1969. O rádio até a Lua leva só uns 1,3 segundos.",
-    },
     asteroid: { name: "Asteroide" },
   },
   flight: {
     happening: "O que está acontecendo",
-    "to-moon": {
-      name: "Voando até a Lua",
-      blurb: "Olha a nave saindo da Terra e indo em direção à Lua. O caminho de cima é a ida.",
-      didYouKnow: "Neste mapa a Lua está mais longe da Terra para você conseguir ver a viagem.",
-      facts: [
-        ["Agora", "Terra → Lua"],
-        ["Depois", "Dar voltas na Lua"],
-      ],
-    },
-    lunar: {
-      name: "Ao redor da Lua",
-      blurb: "Chegou! A nave está dando voltas na Lua — duas vezes — como uma órbita lunar de verdade.",
-      facts: [
-        ["Agora", "Orbitando a Lua"],
-        ["Voltas", "2"],
-        ["Depois", "Voltar para casa"],
-      ],
-    },
-    home: {
-      name: "Voltando para casa",
-      blurb: "Saindo da Lua e voltando para a Terra pelo caminho de baixo, para não misturar com a ida.",
-      facts: [
-        ["Agora", "Lua → Terra"],
-        ["Depois", "Pouso na água"],
-      ],
-    },
-    done: {
-      name: "Pouso na água",
-      blurb:
-        "De volta à Terra. Uma viagem de verdade leva cerca de uma semana. A Lua fica a 384.000 km — longe, mas perto o bastante para o rádio levar só uns 1,3 segundos.",
-      facts: [
-        ["Caminho", "Terra → Lua → Terra"],
-        ["Viagem de verdade", "cerca de uma semana"],
-      ],
-    },
-    phase: {
-      "to-moon": "Voando até a Lua",
-      lunar: "Orbitando a Lua",
-      home: "Voltando para casa",
-      done: "De volta à Terra",
-      landed: "De volta à Terra",
-    },
   },
   eclipse: {
     squish:
